@@ -1,10 +1,11 @@
 import Global.display
 import hevs.graphics.FunGraphics
 
+
 import java.awt._
 import java.awt.event._
 import javax.swing.Timer
-import scala.Console.WHITE
+import scala.Console._
 import scala.collection.mutable.ArrayBuffer
 
 object Global {
@@ -76,6 +77,7 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
 class Invader(var x: Int, var y:Int, var size: Int, var c: Color){
 
   private val d= 100
+//  private val d1 = 200
   private var tempDist = 200
   private var left = true
   private var right = false
@@ -85,9 +87,6 @@ class Invader(var x: Int, var y:Int, var size: Int, var c: Color){
 
 
   def movement():Int={
-    val dx = (if (tempDist >= 0 && tempDist<d) 1 else 0) +
-      (if (tempDist == d && tempDist > 0 ) -1 else 0)
-
     for(_ <- 0 to d){
       if(tempDist >= 0 && left)
         tempDist -= 1
@@ -103,6 +102,8 @@ class Invader(var x: Int, var y:Int, var size: Int, var c: Color){
         right = false
       }
     }
+    val dx = (if (right) 1 else 0) +
+      (if (left) -1 else 0)
 
     if(dx != 0) {
       lDx = dx
@@ -126,7 +127,7 @@ class Projectile(var x: Int, var y: Int, var size: Int, var speed: Int, var dx: 
   }
 
   def draw(): Unit = {
-    display.setColor(Color.RED)
+    display.setColor(Color.GREEN)
     display.drawFillRect(x, y, size, size)
   }
 
@@ -137,13 +138,21 @@ class Projectile(var x: Int, var y: Int, var size: Int, var speed: Int, var dx: 
 
 
 class Game1{
+
+
   private val grid : Array[Array[Int]] = Array.fill(1980, 1080)(0)
 
-  //private var numLives = 3
+  private var numLives = 3
 
   private val score = 0
 
   //var high-score = 0
+
+  private var start = false
+  private var end = false
+  private var checkBtn = true
+
+
 
 
 
@@ -164,7 +173,7 @@ class Game1{
 //  private var prevX = s.x
 //  private var prevY = s.y
 
-  private val ship_proj: ArrayBuffer[Projectile] = ArrayBuffer()
+  private var ship_proj: ArrayBuffer[Projectile] = ArrayBuffer()
 
   private val inv_proj: ArrayBuffer[Projectile] = ArrayBuffer()
 
@@ -172,6 +181,21 @@ class Game1{
   private val SHOT_COOLDOWN_FRAMES = 15
   private var firstDraw = true
 
+
+  def startbtn():Unit ={
+    display.setColor(Color.white)
+    val customFont = new java.awt.Font("Lithograph", java.awt.Font.BOLD, 36)
+    display.drawString(800, 800, s"Start", customFont, new Color(255,255, 255))
+
+  }
+
+  def gameStart():Unit ={
+
+  }
+
+  def gameEnd():Unit ={
+
+  }
 
 
 
@@ -190,27 +214,9 @@ class Game1{
 
 
     i.foreach(iv => {
-      var x = 0
-      var l = false
-      var r = true
-      val ivx = iv.movement()
-      if(r) {
-        iv.x = Math.max(0, Math.min(1920 -i.size, iv.x + ivx * iv.speed))
-      }
-      x +=1
-      if(x == 100) {
-        l = true
-        r = false
-      }
-      if(l) {
-        iv.x = Math.max(0, Math.min(1920 -i.size, iv.x - ivx * iv.speed))
-        x -= 1
-      }
-      if(x == 0){
-        l = false
-        r = true
-      }
 
+      val ivx = iv.movement()
+      iv.x = Math.max(0, Math.min(1920 -i.size, iv.x + ivx * iv.speed))
     }
 
     )
@@ -252,6 +258,32 @@ class Game1{
 //    }
 
     // collision detection spaceship -> invader
+    ship_proj.foreach(proj =>{
+      i.zipWithIndex.foreach { case (invader, idx) =>
+        if(proj.x < invader.x + invader.size &&
+          proj.x +proj.size > invader.x &&
+          proj.y < invader.y + invader.size &&
+          proj.y +proj.size > invader.y){
+          i.remove(idx)
+          ship_proj.remove(idx)
+        }
+
+      }
+
+    })
+
+    inv_proj.foreach(proj =>{
+      val px = s.x
+      val py = s.y
+      if(proj.x < px + s.size &&
+      proj.x +proj.size> px &&
+      proj.y < py + s.size &&
+      proj.y + proj.size > py){
+        numLives -=1
+      }
+
+    })
+
 
 
 
