@@ -76,17 +76,17 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
 
 class Invader(var x: Int, var y:Int, var size: Int, var c: Color){
 
-  private val d= 100
-//  private val d1 = 200
-  private var tempDist = 200
-  private var left = true
-  private var right = false
-  private var lDx = 1
-  //private var lDy = 0
-  var speed = 2
+//  private val d= 100
+////  private val d1 = 200
+//  private var tempDist = 200
+//  private var left = true
+//  private var right = false
+//  private var lDx = 1
+//  //private var lDy = 0
+//  var speed = 2
 
 
-  def movement():Int={
+  /*def movement():Int={
     for(_ <- 0 to d){
       if(tempDist >= 0 && left)
         tempDist -= 1
@@ -110,7 +110,7 @@ class Invader(var x: Int, var y:Int, var size: Int, var c: Color){
     }
 
     dx
-  }
+  }*/
 
 
   def draw(): Unit ={
@@ -152,6 +152,9 @@ class Game1{
   private var end = false
   private var checkBtn = true
 
+  private var invaderDir = 1
+  private val invaderSpeed = 3
+
 
 
 
@@ -177,8 +180,13 @@ class Game1{
 
   private val inv_proj: ArrayBuffer[Projectile] = ArrayBuffer()
 
+
+
   private var shotCooldown = 0
-  private val SHOT_COOLDOWN_FRAMES = 15
+  private val SHOT_CD_FRAMES = 15
+  private var invaderShot = 0
+  private val INVADER_SHOT_CD = 60
+
   private var firstDraw = true
 
 
@@ -213,13 +221,19 @@ class Game1{
 
 
 
-    i.foreach(iv => {
+    if(i.nonEmpty){
 
-      val ivx = iv.movement()
-      iv.x = Math.max(0, Math.min(1920 -i.size, iv.x + ivx * iv.speed))
+      val leftEdge = i.map(_.x).min
+      val rightEdge = i.map(iv => iv.x + iv.size).max
+
+      if(rightEdge >= 1920) invaderDir = -1
+      if(leftEdge <= 0) invaderDir = 1
+
     }
 
-    )
+    i.foreach(iv => {
+      iv.x += invaderDir * invaderSpeed
+    })
 
 
     // projectile management of the ship
@@ -235,7 +249,7 @@ class Game1{
       val dy = -1
 
       ship_proj += new Projectile(projX, projY, 8, 8, dx, dy)
-      shotCooldown = SHOT_COOLDOWN_FRAMES
+      shotCooldown = SHOT_CD_FRAMES
     }
 
     if(!s.shot){
@@ -244,33 +258,44 @@ class Game1{
 
     //projectile management of the invaders
 
-//    if(shotCooldown <= 0 ){
-//      i.foreach(iv =>{
-//        val pjX = iv.x + i.size / 2
-//        val pjY = iv.y + i.size / 2
-//
-//        val dx = 0
-//        val dy = 1
-//        inv_proj += new Projectile(pjX, pjY, 9, 9, dx, dy)
-//        shotCooldown = SHOT_COOLDOWN_FRAMES
-//        }
-//      )
-//    }
+    if(invaderShot > 0){
+      invaderShot -= 1
+    }
+
+
+    if(invaderShot <= 0 && i.nonEmpty){
+      val shooter = i(scala.util.Random.nextInt(i.size))
+
+      val pjX = shooter.x + shooter.size /2
+      val pjY = shooter.y + shooter.size
+
+      inv_proj += new Projectile(pjX, pjY, 9, 6, 0, 1)
+
+      invaderShot = INVADER_SHOT_CD
+    }
 
     // collision detection spaceship -> invader
-    ship_proj.foreach(proj =>{
-      i.zipWithIndex.foreach { case (invader, idx) =>
-        if(proj.x < invader.x + invader.size &&
-          proj.x +proj.size > invader.x &&
-          proj.y < invader.y + invader.size &&
-          proj.y +proj.size > invader.y){
-          i.remove(idx)
-          ship_proj.remove(idx)
+
+
+    val invadersToRemove = ArrayBuffer[Int]()
+    val projectilesToRemove = ArrayBuffer[Int]()
+
+    for ((proj, pIdx) <- ship_proj.zipWithIndex) {
+      for ((invader, iIdx) <- i.zipWithIndex) {
+        if (
+          proj.x < invader.x + invader.size &&
+            proj.x + proj.size > invader.x &&
+            proj.y < invader.y + invader.size &&
+            proj.y + proj.size > invader.y
+        ) {
+          invadersToRemove += iIdx
+          projectilesToRemove += pIdx
         }
-
       }
+    }
 
-    })
+    invadersToRemove.distinct.sorted.reverse.foreach(i.remove)
+    projectilesToRemove.distinct.sorted.reverse.foreach(ship_proj.remove)
 
     inv_proj.foreach(proj =>{
       val px = s.x
