@@ -42,9 +42,9 @@ Le but du jeu est d'eliminer le plus d'invader possible sans se faire toucher pa
 
 Global : Objet singleton contenant l'interface graphique pour permettre le dessin depuis toutes les classes.
 
-Spaceship : Classe du vaisseau, gère la position, les déplacements, les tirs et les entrées du clavier.
+Spaceship : Classe du vaisseau, gère la position, les déplacements, les tirs et les entrées du clavier et l'image du vaisseau.
 
-Invader : Classe des envahisseurs avec position, taille, couleur et méthode de dessin
+Invader : Classe des envahisseurs avec position, taille, couleur et l' image des invadeurs.
 
 Projectile: Classe des projectiles, avec mise à jour de trajectoire, dessin et vérification des limites
 
