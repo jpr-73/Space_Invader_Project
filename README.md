@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/dbf8b808-5c9b-4ec6-be60-7eed43cbca77
 # Hello `FunGraphics`for Scala !
 
 FunGraphics a library implemented by Pierre-Andre Mudry, to build with predefined functions interfaces, and draw shapes easily. La source pour la librairi FunGraphics sont [ici](https://github.com/ISC-HEI/FunGraphics/releases/tag/1.5.20)
@@ -10,10 +12,30 @@ Un projet de construire un jeu utilisant la librairy Fungraphics. Ce jeu consist
 # Game demo
 (video for game demo)
 
+![video 1](https://github.com/user-attachments/assets/94331cb5-50c3-4a47-a681-13380eca6467)
+
+
 
 ## Manuel
 
 Le but du jeu est d'eliminer le plus d'invader possible sans se faire toucher par les projectiles tirée par les invaders, le joueur peut bouger de gauche a droite et de bas en haut, et a 3 vie, si le joueur se fait toucher il perd une vie, si le joueur n'a plus de vie, la partie est terminer.
+
+
+## Image du jeu
+
+
+![Screenshot 1](https://github.com/user-attachments/assets/22e5fa92-7fe5-45a3-8a8b-e0ad066d201c)
+
+![Screenshot 2](https://github.com/user-attachments/assets/437d48ce-4b81-483f-994f-04b158d5ca27)
+
+![Screenshot 3](https://github.com/user-attachments/assets/0073484f-c782-4408-a39f-c14ea1e23756)
+
+![Screenshot 4](https://github.com/user-attachments/assets/eb16fd73-cb77-4bd6-8112-3121a102489d)
+
+
+
+
+
 
 
 ### Structure du code
