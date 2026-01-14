@@ -77,14 +77,14 @@ class Invader(var x: Int, var y: Int, val offsetX: Int, val offsetY: Int, var si
   }
 }
 
-class Projectile(var x: Int, var y: Int, var size: Int, var speed: Int, var dx: Int, var dy: Int) {
+class Projectile(var x: Int, var y: Int, var size: Int, var speed: Int, var dx: Int, var dy: Int, c: Color) {
   def update(): Unit = {
     x += dx * speed
     y += dy * speed
   }
 
   def draw(): Unit = {
-    display.setColor(Color.GREEN)
+    display.setColor(c)
     display.drawFillRect(x, y, size, size)
   }
 
@@ -104,7 +104,7 @@ class Game1 {
 
   private var invaderDir = 1
   private val invaderSpeed = 3
-  private val RESPAWN_DELAY_MS = 2000
+  private val RESPAWN_DELAY_MS = 2500
 
   // Formation base position
   private var formationX = 0
@@ -117,7 +117,7 @@ class Game1 {
   private val inv_proj: ArrayBuffer[Projectile] = ArrayBuffer()
 
   private var shotCooldown = 0
-  private val SHOT_CD_FRAMES = 15
+  private val SHOT_CD_FRAMES = 25
   private val invaderShotPeriod = 60
   private val invaderShotOffset = 20
 
@@ -129,6 +129,18 @@ class Game1 {
   private val buttonY = 500
   private val buttonWidth = 300
   private val buttonHeight = 80
+
+  private val starX = Array.fill(300)(scala.util.Random.nextInt(1920))
+  private val starY = Array.fill(300)(scala.util.Random.nextInt(1080))
+  private val starSize = Array.fill(300)(scala.util.Random.nextInt(3) + 1)
+  private val starType = Array.fill(300)(scala.util.Random.nextInt(2)) // 0 = dot, 1 = cross
+  private val starColor = Array.fill(300)(
+    if (scala.util.Random.nextBoolean())
+      new Color(20, 20, 80)
+    else
+      Color.YELLOW
+  )
+
 
   private val s: Spaceship = new Spaceship(
     960,
@@ -169,6 +181,24 @@ class Game1 {
 
     display.drawFilledPolygon(triangle, c)
   }
+
+  private def drawBackgroundStars(): Unit = {
+    for (i <- starX.indices) {
+      display.setColor(starColor(i))
+      val x = starX(i)
+      val y = starY(i)
+      val s = starSize(i)
+
+      if (starType(i) == 0) {
+        display.drawFillRect(x, y, s, s)
+      } else {
+        display.drawFillRect(x - s, y, s * 2, 1)
+        display.drawFillRect(x, y - s, 1, s * 2)
+      }
+    }
+  }
+
+
 
 
   private def drawStartScreen(): Unit = {
@@ -308,12 +338,31 @@ class Game1 {
 
       // projectiles, collisions, respawn...
       if (shotCooldown > 0) shotCooldown -= 1
-      if (s.shot && shotCooldown <= 0) ship_proj += new Projectile(s.x + s.size/2, s.y + s.size/2, 8, 8, 0, -1); shotCooldown = SHOT_CD_FRAMES
+      if (s.shot && shotCooldown == 0) {
+        ship_proj += new Projectile(
+          s.x + s.size / 2,
+          s.y,
+          8,
+          8,
+          0,
+          -1,
+          Color.BLUE
+        )
+        shotCooldown = SHOT_CD_FRAMES
+      }
       if (!s.shot) shotCooldown = 0
 
       for ((invader, idx) <- i.zipWithIndex)
         if ((frameCount + idx * invaderShotOffset) % invaderShotPeriod == 0)
-          inv_proj += new Projectile(invader.x + invader.size/2, invader.y + invader.size, 9, 6, 0, 1)
+          inv_proj += new Projectile(
+            invader.x + invader.size/2,
+            invader.y + invader.size,
+            9,
+            6,
+            0,
+            1,
+            Color.GREEN
+          )
 
       val invadersToRemove = ArrayBuffer[Int]()
       val projectilesToRemove = ArrayBuffer[Int]()
@@ -349,6 +398,8 @@ class Game1 {
 
         display.setColor(Color.BLACK)
         display.drawFillRect(0, 0, 1920, 1080)
+        drawBackgroundStars()
+
         s.draw()
         ship_proj.foreach(_.draw())
         i.foreach(_.draw())
