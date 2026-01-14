@@ -3,6 +3,7 @@ import hevs.graphics.FunGraphics
 
 import java.awt._
 import java.awt.event._
+import javax.sound.sampled.{AudioSystem, Clip}
 import javax.swing.Timer
 
 // main interface, made as a global object to make functions with
@@ -13,6 +14,9 @@ object Global {
 
 //class of the spaceship which the user will be able to control
 class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
+
+
+
 
   // values to verify the direction of the spaceship and if its shooting
   private var up = false
@@ -26,7 +30,7 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
 
 
 
-  def computeDirection(): (Int, Int) = {
+  def spaceshipDirection(): (Int, Int) = {
    //horizontal movement: +1 for right, -1 for left
     val horizon = (if(right)1 else 0) - (if(left) 1 else 0)
     //same for vertical: +1 down, -1 up
@@ -37,7 +41,7 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
   //draw a rectangle for the spaceship
   def draw(): Unit = {
     display.setColor(c)
-    display.drawFillRect(x, y, size, size)
+    display.drawFillRect(x, y ,size, size)
   }
 
 
@@ -99,6 +103,38 @@ class Projectile(var x: Int, var y: Int, var size: Int, var speed: Int, var dx: 
     val coteBas = y > height
 
     coteDroit ||coteGauche ||coteHaut ||coteBas
+  }
+}
+
+class Audio (path : String) {
+  private var audioClip: Clip = _
+
+  try {
+    val url = classOf[Audio].getResource(path)
+    val audioStream = AudioSystem.getAudioInputStream(url)
+
+    audioClip = AudioSystem.getClip.asInstanceOf[Clip]
+    audioClip.open(audioStream)
+  } catch {
+    case e: Exception =>
+      e.printStackTrace()
+  }
+
+  def play(): Unit = {
+    // Open stream and play
+    try {
+      if (!audioClip.isOpen) audioClip.open()
+      audioClip.stop()
+      audioClip.setMicrosecondPosition(0)
+      audioClip.start()
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+  }
+
+  def stop(): Unit = {
+    audioClip.stop()
   }
 }
 
@@ -182,10 +218,20 @@ class Game1 {
   private val buttonHeight = 80
 
 
+  //different music depending on the game state
+  private val gameSound: Audio = new Audio("MP4 to WAV Playback.wav")
+  private val endSound: Audio = new Audio("Video Playback.wav")
+  private val menuSound: Audio = new Audio("Driftveil City Music.wav")
+
+  // checks for the game sound loop
+  private var menuPlaying = false
+  private var gameSoundPlaying = false
+  private var endSoundPlaying = false
+
 
   // move, shoot with the spaceship
   private def moveship(): Unit = {
-    val (dx, dy) = spaceship.computeDirection()
+    val (dx, dy) = spaceship.spaceshipDirection()
 
     // compute next position
     val nextX = spaceship.x + dx * spaceship.speed
@@ -438,10 +484,43 @@ class Game1 {
 
   // main loop where everything runs from here
   private val timer = new Timer(16, (_: ActionEvent) => {
-    if(!gameStarted) drawStartScreen()
-    else if(gameOver) drawGameOverScreen()
+    if(!gameStarted) {
+      drawStartScreen()
+      // menu sound management in the game loop
+      if(!menuPlaying) {
+        menuSound.play()
+        menuPlaying = true
+        gameSound.stop()
+        endSound.stop()
+        gameSoundPlaying = false
+        endSoundPlaying = false
+      }
+
+    }
+    else if(gameOver){
+      drawGameOverScreen()
+
+      // game over sound management in the game loop
+      if (!endSoundPlaying) {
+        endSound.play()
+        endSoundPlaying = true
+        menuSound.stop()
+        gameSound.stop()
+        menuPlaying = false
+        gameSoundPlaying = false
+      }
+    }
     else {
       frameCount += 1
+      // game sound management in the game loop
+      if (!gameSoundPlaying) {
+        gameSound.play()
+        gameSoundPlaying = true
+        menuSound.stop()
+        endSound.stop()
+        menuPlaying = false
+        endSoundPlaying = false
+      }
       moveship()
       moveInvader()
       projectiltrajectory()
@@ -452,10 +531,6 @@ class Game1 {
   })
 
   timer.start()
-
-
-
-
 
 }
 
