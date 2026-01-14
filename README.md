@@ -6,7 +6,7 @@ FunGraphics a library implemented by Pierre-Andre Mudry, to build with predefine
 # space_Invader
 A game project in Scala using the FunGraphics library. This game consists of controlling a spaceship and shooting the invaders while dodging the shots coming from the invaders.
 
-#Game demo
+# Game demo
 (video for game demo)
 
 
