@@ -16,6 +16,14 @@ Un projet de construire un jeu utilisant la librairy Fungraphics. Ce jeu consist
 Le but du jeu est d'eliminer le plus d'invader possible sans se faire toucher par les projectiles tirée par les invaders, le joueur peut bouger de gauche a droite et de bas en haut, et a 3 vie, si le joueur se fait toucher il perd une vie, si le joueur n'a plus de vie, la partie est terminer.
 
 
+![<img width="1915" height="1055" alt="Screenshot 2026-01-14 at 17 49 44" src="https://github.com/user-attachments/assets/22e5fa92-7fe5-45a3-8a8b-e0ad066d201c" />]
+
+![<img width="1902" height="1062" alt="Screenshot 2026-01-14 at 17 49 55" src="https://github.com/user-attachments/assets/2baf4323-c054-4024-a4f0-65746792eca6" />]
+
+![<img width="1912" height="1078" alt="Screenshot 2026-01-14 at 17 51 01" src="https://github.com/user-attachments/assets/1789940b-981c-44da-841a-10563de6e660" />]
+
+![<img width="1908" height="1068" alt="Screenshot 2026-01-14 at 17 50 10" src="https://github.com/user-attachments/assets/eb16fd73-cb77-4bd6-8112-3121a102489d" />]
+
 ### Structure du code
 
 Global : Objet singleton contenant l'interface graphique pour permettre le dessin depuis toutes les classes.
