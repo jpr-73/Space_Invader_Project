@@ -20,9 +20,13 @@ Le but du jeu est d'eliminer le plus d'invader possible sans se faire toucher pa
 
 
 ![Screenshot 1](https://github.com/user-attachments/assets/22e5fa92-7fe5-45a3-8a8b-e0ad066d201c)
-![Screenshot 2]("https://github.com/user-attachments/assets/e7e391c7-10b5-4463-af63-91ce07135160")
-![Screenshot 3]("https://github.com/user-attachments/assets/9cdf2e98-cce6-4758-b2b9-f4e72391de64")
+
+![Screenshot 2](https://github.com/user-attachments/assets/437d48ce-4b81-483f-994f-04b158d5ca27)
+
+![Screenshot 3](https://github.com/user-attachments/assets/0073484f-c782-4408-a39f-c14ea1e23756)
+
 ![Screenshot 4](https://github.com/user-attachments/assets/eb16fd73-cb77-4bd6-8112-3121a102489d)
+
 
 
 
