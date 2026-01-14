@@ -1,5 +1,6 @@
 import Global.display
 import hevs.graphics.FunGraphics
+import hevs.graphics.utils.GraphicsBitmap
 
 import java.awt._
 import java.awt.event._
@@ -16,7 +17,15 @@ object Global {
 class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
 
 
-
+  private val spaceSprite: GraphicsBitmap ={
+    try {
+      new GraphicsBitmap("/Purple Space Ship copy.png")
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        null
+    }
+  }
 
   // values to verify the direction of the spaceship and if its shooting
   private var up = false
@@ -42,6 +51,10 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
   def draw(): Unit = {
     display.setColor(c)
     display.drawFillRect(x, y ,size, size)
+
+    if(spaceSprite != null){
+      display.drawPicture(x +size / 2, y + size / 2 ,spaceSprite)
+    }
   }
 
 
@@ -76,9 +89,24 @@ class Spaceship(var x: Int, var y: Int, var size: Int, var c: Color){
 
 //class of the invader which is the enemy
 class Invader(var x: Int, var y: Int, val offsetX: Int, val offsetY: Int, var size: Int, var c: Color) {
+
+  private val invaderSprite: GraphicsBitmap ={
+    try {
+      new GraphicsBitmap("/Night Raider.png")
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        null
+    }
+  }
+
   def draw(): Unit = {
     display.setColor(c)
     display.drawFillRect(x, y, size, size)
+
+    if(invaderSprite != null){
+      display.drawTransformedPicture(x + size/ 2, y + size / 2, 45.5, 1.0, invaderSprite)
+    }
   }
 }
 
@@ -450,8 +478,11 @@ class Game1 {
 
   // initial game state with title, instruction, start button, when code executed
   private def drawStartScreen(): Unit = {
+
     display.setColor(Color.BLACK)
     display.drawFillRect(0, 0, screenWidth, screenHeight)
+
+    drawStars()
     display.setColor(Color.WHITE)
     display.drawString(650, 300, "SPACE INVADERS", new Font("Lithograph",Font.BOLD,72), Color.WHITE)
 
@@ -469,6 +500,8 @@ class Game1 {
   private def drawGameOverScreen(): Unit = {
     display.setColor(Color.BLACK)
     display.drawFillRect(0, 0, screenWidth, screenHeight)
+
+    drawStars()
     display.setColor(Color.RED)
     display.drawString(650, 400, "GAME OVER", new Font("Lithograph",Font.BOLD, 96),Color.RED)
     display.setColor(Color.WHITE)
