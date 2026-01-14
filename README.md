@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/dbf8b808-5c9b-4ec6-be60-7eed43cbca77
 # Hello `FunGraphics`for Scala !
 
 FunGraphics a library implemented by Pierre-Andre Mudry, to build with predefined functions interfaces, and draw shapes easily. La source pour la librairi FunGraphics sont [ici](https://github.com/ISC-HEI/FunGraphics/releases/tag/1.5.20)
@@ -9,6 +11,9 @@ Un projet de construire un jeu utilisant la librairy Fungraphics. Ce jeu consist
 
 # Game demo
 (video for game demo)
+
+![video 1](https://github.com/user-attachments/assets/94331cb5-50c3-4a47-a681-13380eca6467)
+
 
 
 ## Manuel
